@@ -1,0 +1,28 @@
+<main class="container">
+  <h1>Task &amp; Priority Board</h1>
+
+  <app-task-form (taskCreated)="addTask($event)" />
+
+  <div class="toolbar">
+    <span>Total Tasks: {{ tasks.length }}</span>
+    <button (click)="hideCompleted = !hideCompleted">
+      {{ hideCompleted ? 'Show Completed' : 'Hide Completed' }}
+    </button>
+  </div>
+
+  @if (tasks.length === 0) {
+    <p class="empty-state">No tasks yet. Add one above!</p>
+  } @else if (visibleTasks.length === 0) {
+    <p class="empty-state">All tasks are completed and hidden!</p>
+  } @else {
+    <div class="task-list">
+      @for (task of visibleTasks; track task.id) {
+        <app-task-item
+          [task]="task"
+          (toggleComplete)="toggleTask($event)"
+          (delete)="removeTask($event)"
+        />
+      }
+    </div>
+  }
+</main>

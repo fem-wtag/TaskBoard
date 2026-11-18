@@ -1,0 +1,16 @@
+<form (ngSubmit)="(onSubmit)" class="task-form">
+  <input type="text" name="title" placeholder="Enter a new task..." [(ngModel)]="title" required />
+
+  <select name="priority" [(ngModel)]="priority">
+    <option value="Low">Low Priority</option>
+    <option value="Medium">Medium Priority</option>
+    <option value="High">High Priority</option>
+  </select>
+
+  <label class="urgent-checkout">
+    <input type="checkbox" name="isUrgent" [(ngModel)]="isUrgent" />
+    Urgent
+  </label>
+
+  <button type="submit">Add Task</button>
+</form>

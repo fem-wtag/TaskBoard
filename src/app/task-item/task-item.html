@@ -1,0 +1,13 @@
+<div class="task-card" [ngStyle]="getCardStyles()" [appUrgentHighlight]="task.isUrgent">
+  <div class="task-info">
+    <input type="checkbox" [checked]="task.completed" (change)="toggleComplete.emit(task.id)" />
+    <span class="task-title">{{ task.title }}</span>
+    <span class="badge">{{ task.priority }}</span>
+
+    @if (task.isUrgent) {
+      <span class="urgent-tag">URGENT</span>
+    }
+  </div>
+
+  <button class="delete-btn" (click)="delete.emit(task.id)">Delete</button>
+</div>
