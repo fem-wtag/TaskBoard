@@ -51,7 +51,11 @@ export class App {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed: Task[] = JSON.parse(saved);
+        return parsed.map((t) => ({
+          ...t,
+          createdAt: t.createdAt ?? Date.now(),
+        }));
       } catch {
         // Fallback to defaults if storage is corrupted
       }
@@ -64,6 +68,7 @@ export class App {
         priority: 'High',
         isUrgent: true,
         completed: false,
+        createdAt: Date.now() - 3600_000,
       },
       {
         id: 2,
@@ -71,6 +76,7 @@ export class App {
         priority: 'Low',
         isUrgent: false,
         completed: false,
+        createdAt: Date.now(),
       },
     ];
   }

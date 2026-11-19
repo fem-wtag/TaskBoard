@@ -118,3 +118,10 @@ body {
   background: white;
   border-radius: 6px;
 }
+
+.timestamp {
+  display: block;
+  font-size: 0.75rem;
+  color: #718096;
+  margin-top: 0.15rem;
+}

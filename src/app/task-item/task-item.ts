@@ -1,10 +1,12 @@
-import { Component, computed, EventEmitter, input, output, Output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { Task } from '../task.model';
-import { NgStyle } from '@angular/common';
+import { DatePipe, NgStyle, UpperCasePipe } from '@angular/common';
 import { UrgentHighlight } from '../urgent-highlight';
+import { TruncatePipe } from '../truncate-pipe';
+import { PriorityLabelPipe } from '../priority-label-pipe';
 
 @Component({
-  imports: [NgStyle, UrgentHighlight],
+  imports: [NgStyle, UrgentHighlight, DatePipe, UpperCasePipe, TruncatePipe, PriorityLabelPipe],
   selector: 'app-task-item',
   styleUrl: './task-item.css',
   templateUrl: './task-item.html',

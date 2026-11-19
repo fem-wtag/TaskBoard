@@ -4,9 +4,9 @@
   <app-task-form (taskCreated)="addTask($event)" />
 
   <div class="toolbar">
-    <span>Total Tasks: {{ tasks.length }}</span>
-    <button (click)="hideCompleted = !hideCompleted">
-      {{ hideCompleted ? 'Show Completed' : 'Hide Completed' }}
+    <span>Total Tasks: {{ tasks().length }}</span>
+    <button (click)="hideCompleted.update((val) => !val)">
+      {{ hideCompleted() ? 'Show Completed' : 'Hide Completed' }}
     </button>
   </div>
 
