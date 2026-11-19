@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, computed, EventEmitter, input, output, Output } from '@angular/core';
 import { Task } from '../task.model';
 import { NgStyle } from '@angular/common';
 import { UrgentHighlight } from '../urgent-highlight';
@@ -10,12 +10,13 @@ import { UrgentHighlight } from '../urgent-highlight';
   templateUrl: './task-item.html',
 })
 export class TaskItem {
-  @Input({ required: true }) task!: Task;
+  task = input.required<Task>();
 
-  @Output() delete = new EventEmitter<number>();
-  @Output() toggleComplete = new EventEmitter<number>();
+  delete = output<number>();
+  toggleComplete = output<number>();
 
-  getCardStyles(): Record<string, string> {
+  cardStyles = computed<Record<string, string>>(() => {
+    const currentTask = this.task();
     const borderColors: Record<string, string> = {
       High: '#e53e3e',
       Medium: '#dd6b20',
@@ -23,9 +24,9 @@ export class TaskItem {
     };
 
     return {
-      'border-left': `6px solid ${borderColors[this.task.priority]}`,
-      opacity: this.task.completed ? '0.6' : '1',
-      'text-decoration': this.task.completed ? 'line-through' : 'none',
+      'border-left': `6px solid ${borderColors[currentTask.priority]}`,
+      opacity: currentTask.completed ? '0.6' : '1',
+      'text-decoration': currentTask.completed ? 'line-through' : 'none',
     };
-  }
+  });
 }

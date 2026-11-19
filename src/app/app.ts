@@ -1,7 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { Task } from './task.model';
 import { TaskForm } from './task-form/task-form';
 import { TaskItem } from './task-item/task-item';
+
+const STORAGE_KEY = 'angular-singal-tasks';
 
 @Component({
   imports: [TaskForm, TaskItem],
@@ -10,40 +12,66 @@ import { TaskItem } from './task-item/task-item';
   templateUrl: './app.html',
 })
 export class App {
-  hideCompleted = false;
+  tasks = signal<Task[]>(this.loadInitialTasks());
+  hideCompleted = signal(false);
+  searchquery = signal('');
 
-  tasks: Task[] = [
-    {
-      id: 1,
-      title: 'Practice Angular standalone components',
-      priority: 'High',
-      isUrgent: true,
-      completed: false,
-    },
-    {
-      id: 2,
-      title: 'Implement custom directives',
-      priority: 'Low',
-      isUrgent: false,
-      completed: false,
-    },
-  ];
+  remainingCount = computed(() => this.tasks().filter((t) => !t.completed).length);
 
-  get visibleTasks(): Task[] {
-    return this.hideCompleted ? this.tasks.filter((t) => !t.completed) : this.tasks;
+  visibleTasks = computed(() => {
+    const query = this.searchquery().toLowerCase().trim();
+    return this.tasks().filter((task) => {
+      const matchesCompletion = !this.hideCompleted() || !task.completed;
+      const matchesSearch = !query || task.title.toLowerCase().includes(query);
+      return matchesCompletion && matchesSearch;
+    });
+  });
+
+  constructor() {
+    effect(() => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tasks()));
+    });
   }
 
   addTask(newTask: Task): void {
-    this.tasks = [newTask, ...this.tasks];
+    this.tasks.update((current) => [newTask, ...current]);
   }
 
   toggleTask(taskId: number): void {
-    this.tasks = this.tasks.map((task) =>
-      task.id === taskId ? { ...task, completed: !task.completed } : task,
+    this.tasks.update((current) =>
+      current.map((task) => (task.id === taskId ? { ...task, completed: !task.completed } : task)),
     );
   }
 
   removeTask(taskId: number): void {
-    this.tasks = this.tasks.filter((task) => task.id !== taskId);
+    this.tasks.update((current) => current.filter((task) => task.id !== taskId));
+  }
+
+  private loadInitialTasks(): Task[] {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        // Fallback to defaults if storage is corrupted
+      }
+    }
+
+    return [
+      {
+        id: 1,
+        title: 'Practice Angular standalone components',
+        priority: 'High',
+        isUrgent: true,
+        completed: false,
+      },
+      {
+        id: 2,
+        title: 'Implement custom directives',
+        priority: 'Low',
+        isUrgent: false,
+        completed: false,
+      },
+    ];
   }
 }

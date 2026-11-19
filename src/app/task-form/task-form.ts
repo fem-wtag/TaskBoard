@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Priority, Task } from '../task.model';
 
@@ -9,28 +9,28 @@ import { Priority, Task } from '../task.model';
   templateUrl: './task-form.html',
 })
 export class TaskForm {
-  title = '';
-  priority: Priority = 'Medium';
-  isUrgent = false;
+  title = signal('');
+  priority = signal<Priority>('Medium');
+  isUrgent = signal(false);
 
-  @Output() taskCreated = new EventEmitter<Task>();
+  taskCreated = output<Task>();
 
   onSubmit(): void {
-    const trimmedTitle = this.title.trim();
+    const trimmedTitle = this.title().trim();
     if (!trimmedTitle) return;
 
     const newTask: Task = {
       id: Date.now(),
       title: trimmedTitle,
-      priority: this.priority,
-      isUrgent: this.isUrgent,
+      priority: this.priority(),
+      isUrgent: this.isUrgent(),
       completed: false,
     };
 
     this.taskCreated.emit(newTask);
 
-    this.title = '';
-    this.priority = 'Medium';
-    this.isUrgent = false;
+    this.title.set('');
+    this.priority.set('Medium');
+    this.isUrgent.set(false);
   }
 }

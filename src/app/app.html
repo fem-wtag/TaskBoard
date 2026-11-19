@@ -10,13 +10,13 @@
     </button>
   </div>
 
-  @if (tasks.length === 0) {
+  @if (tasks().length === 0) {
     <p class="empty-state">No tasks yet. Add one above!</p>
-  } @else if (visibleTasks.length === 0) {
+  } @else if (visibleTasks().length === 0) {
     <p class="empty-state">All tasks are completed and hidden!</p>
   } @else {
     <div class="task-list">
-      @for (task of visibleTasks; track task.id) {
+      @for (task of visibleTasks(); track task.id) {
         <app-task-item
           [task]="task"
           (toggleComplete)="toggleTask($event)"

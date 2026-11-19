@@ -1,16 +1,16 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, input } from '@angular/core';
 
 @Directive({
   selector: '[appUrgentHighlight]',
 })
 export class UrgentHighlight {
-  @Input() appUrgentHighlight = false;
+  private el = inject(ElementRef);
 
-  constructor(private el: ElementRef) {}
+  appUrgentHighlight = input(false);
 
   @HostListener('mouseenter')
   onMouseEnter(): void {
-    if (this.appUrgentHighlight) {
+    if (this.appUrgentHighlight()) {
       this.el.nativeElement.style.backgroundColor = '#fff5f5';
       this.el.nativeElement.style.boxShadow = '0 4px 12px rgba(229, 62, 62, 0.25)';
     }
