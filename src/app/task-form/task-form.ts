@@ -25,6 +25,7 @@ export class TaskForm {
       priority: this.priority(),
       isUrgent: this.isUrgent(),
       completed: false,
+      createdAt: Date.now(),
     };
 
     this.taskCreated.emit(newTask);

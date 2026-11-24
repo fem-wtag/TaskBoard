@@ -6,4 +6,5 @@ export interface Task {
   priority: Priority;
   isUrgent: boolean;
   completed: boolean;
+  createdAt: number;
 }
