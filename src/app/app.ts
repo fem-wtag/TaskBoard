@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Task } from './task.model';
 import { TaskForm } from './task-form/task-form';
 import { TaskItem } from './task-item/task-item';
@@ -13,12 +13,15 @@ const STORAGE_KEY = 'angular-singal-tasks';
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App {
+export class App implements OnInit, OnDestroy {
   protected taskService = inject(TaskService);
 
   hideCompleted = signal(false);
   searchquery = signal('');
   reportOutput = signal('');
+  secondsOpen = signal(0);
+
+  private timerId?: ReturnType<typeof setInterval>;
 
   visibleTasks = computed(() => {
     const query = this.searchquery().toLowerCase().trim();
@@ -31,5 +34,16 @@ export class App {
 
   exportSummary(): void {
     this.reportOutput.set(this.taskService.generateTextReport());
+  }
+
+  ngOnInit(): void {
+    this.timerId = setInterval(() => {
+      this.secondsOpen.update((s) => s + 1);
+    }, 1000);
+  }
+  ngOnDestroy(): void {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
   }
 }
