@@ -125,3 +125,13 @@ body {
   color: #718096;
   margin-top: 0.15rem;
 }
+
+.report-box {
+  background: #edf2f7;
+  border-left: 4px solid #3182ce;
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  margin-bottom: 1rem;
+}

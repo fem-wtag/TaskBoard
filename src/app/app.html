@@ -1,27 +1,28 @@
 <main class="container">
   <h1>Task &amp; Priority Board</h1>
 
-  <app-task-form (taskCreated)="addTask($event)" />
+  <app-task-form />
 
   <div class="toolbar">
-    <span>Total Tasks: {{ tasks().length }}</span>
+    <span> {{ taskService.remainingCount() }} of {{ taskService.tasks().length }} remaining </span>
     <button (click)="hideCompleted.update((val) => !val)">
       {{ hideCompleted() ? 'Show Completed' : 'Hide Completed' }}
     </button>
+    <button (click)="exportSummary()">Export Report</button>
   </div>
 
-  @if (tasks().length === 0) {
+  @if (reportOutput()) {
+    <pre class="report-box">{{ reportOutput() }}</pre>
+  }
+
+  @if (taskService.tasks().length === 0) {
     <p class="empty-state">No tasks yet. Add one above!</p>
   } @else if (visibleTasks().length === 0) {
     <p class="empty-state">All tasks are completed and hidden!</p>
   } @else {
     <div class="task-list">
       @for (task of visibleTasks(); track task.id) {
-        <app-task-item
-          [task]="task"
-          (toggleComplete)="toggleTask($event)"
-          (delete)="removeTask($event)"
-        />
+        <app-task-item [task]="task" />
       }
     </div>
   }
