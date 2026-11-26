@@ -1,8 +1,24 @@
-<div class="task-card" [ngStyle]="cardStyles()" [appUrgentHighlight]="task().isUrgent">
+<div
+  class="task-card"
+  [ngStyle]="cardStyles()"
+  [appUrgentHighlight]="task().isUrgent"
+  (mouseenter)="activity.recordHover()"
+>
   <div class="task-info">
-    <input type="checkbox" [checked]="task().completed" (change)="toggleComplete.emit(task().id)" />
-    <span class="task-title" [title]="task().title">{{ task().title | truncate: 42 }}</span>
-    <small class="timestamp">Added {{ task().createdAt | date: 'MMM d, h:mm a' }}</small>
+    <input
+      type="checkbox"
+      [checked]="task().completed"
+      (change)="taskService.toggleTask(task().id)"
+    />
+
+    <div>
+      <span class="task-title" [title]="task().title">{{ task().title | truncate: 42 }}</span>
+      <small class="timestamp">
+        Added {{ task().createdAt | date: 'MMM d, h:mm a' }} · Hovered: {{ activity.hoverCount() }}x
+        ({{ activity.lastInspected() }})
+      </small>
+    </div>
+
     <span class="badge">{{ task().priority | priorityLabel: true | uppercase }}</span>
 
     @if (task().isUrgent) {
@@ -10,5 +26,5 @@
     }
   </div>
 
-  <button class="delete-btn" (click)="delete.emit(task().id)">Delete</button>
+  <button class="delete-btn" (click)="taskService.removeTask(task().id)">Delete</button>
 </div>
